@@ -32,11 +32,16 @@ import {
   PieChart,
   ShoppingCart,
   BellRing,
-  LineChart
+  LineChart,
+  X
 } from "lucide-react";
 
-// Composant Sidebar simplifié
-export const Sidebar = memo(function Sidebar() {
+interface SidebarProps {
+  onClose: () => void;
+}
+
+// Composant Sidebar responsive
+export const Sidebar = memo(function Sidebar({ onClose }: SidebarProps) {
   const [openSections, setOpenSections] = useState<string[]>(["dashboard"]);
 
   const toggleSection = useCallback((section: string) => {
@@ -46,6 +51,13 @@ export const Sidebar = memo(function Sidebar() {
         : [...prev, section]
     );
   }, []);
+
+  const handleLinkClick = () => {
+    // On mobile, close sidebar when clicking a link
+    if (window.innerWidth < 1024) {
+      onClose();
+    }
+  };
 
   const menuSections = [
     {
@@ -170,17 +182,25 @@ export const Sidebar = memo(function Sidebar() {
 
   return (
     <div className="w-64 bg-[#38712c] text-white h-full flex flex-col">
-      {/* Logo */}
-      <div className="p-6 border-b border-white/10">
+      {/* Header with close button for mobile */}
+      <div className="p-4 lg:p-6 border-b border-white/10 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
             <Home className="w-6 h-6 text-[#38712c]" />
           </div>
           <div>
             <h1 className="text-lg font-bold">Campus Housing PMS</h1>
-            <p className="text-xs text-white/80">Admin Dashboard</p>
+            <p className="text-xs text-white/80 hidden lg:block">Admin Dashboard</p>
+            <p className="text-xs text-white/80 lg:hidden">Admin</p>
           </div>
         </div>
+        <button
+          onClick={onClose}
+          className="lg:hidden p-1 hover:bg-white/10 rounded"
+          aria-label="Close sidebar"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Navigation */}
@@ -214,6 +234,7 @@ export const Sidebar = memo(function Sidebar() {
                       <NavLink
                         key={item.path}
                         to={item.path}
+                        onClick={handleLinkClick}
                         className={({ isActive }) => 
                           `flex items-center gap-2 px-3 py-2 text-sm rounded transition-all ${
                             isActive
@@ -223,7 +244,7 @@ export const Sidebar = memo(function Sidebar() {
                         }
                       >
                         {item.icon && <item.icon className="w-3 h-3" />}
-                        <span>{item.label}</span>
+                        <span className="truncate">{item.label}</span>
                       </NavLink>
                     ))}
                   </div>
@@ -232,6 +253,7 @@ export const Sidebar = memo(function Sidebar() {
             ) : (
               <NavLink
                 to={section.path!}
+                onClick={handleLinkClick}
                 className={({ isActive }) => 
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
                     isActive
@@ -252,6 +274,7 @@ export const Sidebar = memo(function Sidebar() {
       <div className="border-t border-white/10 p-4 space-y-1">
         <NavLink
           to="/notifications"
+          onClick={handleLinkClick}
           className={({ isActive }) => 
             `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
               isActive
@@ -269,6 +292,7 @@ export const Sidebar = memo(function Sidebar() {
         
         <NavLink
           to="/upcoming-departures"
+          onClick={handleLinkClick}
           className={({ isActive }) => 
             `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
               isActive
@@ -283,6 +307,7 @@ export const Sidebar = memo(function Sidebar() {
         
         <NavLink
           to="/settings"
+          onClick={handleLinkClick}
           className={({ isActive }) => 
             `flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
               isActive

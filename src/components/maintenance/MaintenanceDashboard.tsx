@@ -52,7 +52,6 @@ export default function MaintenanceDashboard() {
 
   // DONNÉES DE MAINTENANCE
   const maintenanceEvents: MaintenanceEvent[] = [
-    // Décembre 2024 - Maintenance planifiée
     { id: "m1", title: "Contrôle Chauffage", type: "inspection", startDate: "2024-12-04", endDate: "2024-12-04", room: "Système Chauffage", status: "scheduled", building: "Bâtiment A", technician: "Jean Dupont", priority: "medium", notes: "Contrôle annuel obligatoire" },
     { id: "m2", title: "Révision Ascenseur B", type: "maintenance", startDate: "2024-12-08", endDate: "2024-12-08", room: "Ascenseur B", status: "scheduled", building: "Bâtiment B", technician: "Pierre Martin", priority: "medium", notes: "Révision trimestrielle" },
     { id: "m3", title: "Vérification Électrique", type: "inspection", startDate: "2024-12-12", endDate: "2024-12-12", room: "Tableau Principal", status: "scheduled", building: "Bâtiment A", technician: "Luc Bernard", priority: "high", notes: "Vérification sécurité" },
@@ -70,20 +69,27 @@ export default function MaintenanceDashboard() {
     { id: "m15", title: "Nettoyage Profond", type: "cleaning", startDate: "2024-12-30", endDate: "2024-12-30", room: "Toutes Chambres", status: "scheduled", building: "Bâtiment B", technician: "Équipe Nettoyage", priority: "low" },
   ];
 
-  // Fonction pour obtenir la couleur selon le type d'événement
+  // Fonction pour obtenir la couleur selon le type d'événement - PALETTE SIMPLIFIÉE
   const getEventColor = (type: MaintenanceEvent["type"]) => {
+    // PRIORITÉ 1 - BLEU (Interventions critiques)
+    if (type === "emergency") return "#d32f2f"; // Rouge pour urgences
+    
+    // PRIORITÉ 2 - ORANGE (Maintenance)
+    if (type === "maintenance") return "#f57c00"; // Orange
+    
+    // PRIORITÉ 3 - VERT (Vérifications)
+    if (type === "inspection") return "#1976d2"; // Bleu
+    
+    // AUTRES
     switch(type) {
-      case "maintenance": return "#f57c00"; // Orange
-      case "repair": return "#d32f2f"; // Rouge
-      case "inspection": return "#1976d2"; // Bleu
-      case "emergency": return "#c2185b"; // Rose/rouge vif
-      case "cleaning": return "#7b1fa2"; // Violet
-      case "upgrade": return "#388e3c"; // Vert
+      case "repair": return "#7b1fa2"; // Violet
+      case "cleaning": return "#5d4037"; // Marron
+      case "upgrade": return "#388e3c"; // Vert foncé
       default: return "#757575"; // Gris
     }
   };
 
-  // Fonction pour obtenir la couleur selon la priorité
+  // Fonction pour obtenir la couleur selon la priorité - PALETTE SIMPLIFIÉE
   const getPriorityColor = (priority: MaintenanceEvent["priority"]) => {
     switch(priority) {
       case "urgent": return "#d32f2f"; // Rouge
@@ -137,9 +143,11 @@ export default function MaintenanceDashboard() {
     return new Date(year, month + 1, 0).getDate();
   };
 
+  // Fonction corrigée pour obtenir le premier jour du mois (lundi = 0)
   const getFirstDayOfMonth = (year: number, month: number) => {
     const day = new Date(year, month, 1).getDay();
-    return day === 0 ? 6 : day - 1; // Lundi = 0
+    // Convertir pour que lundi = 0, dimanche = 6
+    return day === 0 ? 6 : day - 1;
   };
 
   // Générer les jours du calendrier
@@ -249,29 +257,26 @@ export default function MaintenanceDashboard() {
   ).length;
   const urgentTickets = maintenanceEvents.filter(e => e.priority === "urgent" && (e.status === "pending" || e.status === "in-progress")).length;
 
-  // STYLES
+  // STYLES ÉQUILIBRÉS - NI TROP GRAND NI TROP PETIT
   const styles = {
     container: {
       minHeight: '100vh',
       backgroundColor: '#f5f7fa',
       fontFamily: "'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif",
-      color: '#2c3e50'
-    },
-    mainContent: {
-      flex: 1,
-      padding: '20px',
-      overflowY: 'auto' as const
+      color: '#2c3e50',
+      padding: '20px'
     },
     header: {
+      maxWidth: '1050px',
+      margin: '0 auto 30px auto',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: '30px',
       flexWrap: 'wrap' as const,
       gap: '20px'
     },
     headerTitle: {
-      fontSize: '28px',
+      fontSize: '26px',
       fontWeight: 600,
       color: '#2c3e50',
       margin: 0
@@ -280,309 +285,334 @@ export default function MaintenanceDashboard() {
       backgroundColor: '#f57c00',
       color: 'white',
       border: 'none',
-      padding: '12px 24px',
-      borderRadius: '8px',
-      fontSize: '14px',
+      padding: '11px 22px',
+      borderRadius: '7px',
+      fontSize: '13px',
       fontWeight: 600,
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
-      gap: '8px'
+      gap: '7px'
     },
     statsGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-      gap: '20px',
-      marginBottom: '30px'
+      gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+      gap: '16px',
+      margin: '30px auto',
+      maxWidth: '1050px'
     },
     statCard: {
       backgroundColor: 'white',
-      padding: '20px',
-      borderRadius: '12px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+      padding: '18px',
+      borderRadius: '9px',
+      boxShadow: '0 3px 9px rgba(0,0,0,0.04)',
       borderLeft: '4px solid #f57c00'
     },
     statNumber: {
-      fontSize: '32px',
+      fontSize: '26px',
       fontWeight: 700,
       color: '#2c3e50',
       marginBottom: '5px'
     },
     statLabel: {
-      fontSize: '14px',
+      fontSize: '13px',
       color: '#7f8c8d',
       fontWeight: 500
     },
     calendarContainer: {
+      maxWidth: '1050px',
+      margin: '30px auto',
       backgroundColor: 'white',
-      borderRadius: '12px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-      marginBottom: '30px',
-      overflow: 'hidden'
+      borderRadius: '11px',
+      boxShadow: '0 4px 11px rgba(0,0,0,0.05)',
+      overflow: 'hidden',
+      border: '1px solid #eaeaea'
     },
     calendarHeader: {
-      padding: '20px',
+      padding: '18px',
       borderBottom: '1px solid #eaeaea',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      backgroundColor: '#f8f9fa'
+      backgroundColor: '#f8f9fa',
+      flexWrap: 'wrap' as const,
+      gap: '15px'
     },
     monthNavigation: {
       display: 'flex',
       alignItems: 'center',
-      gap: '15px'
+      gap: '12px',
+      flexWrap: 'wrap' as const
     },
     navButton: {
       backgroundColor: 'transparent',
       border: '1px solid #ddd',
       borderRadius: '6px',
-      padding: '8px 16px',
+      padding: '7px 14px',
       cursor: 'pointer',
-      fontSize: '14px',
+      fontSize: '13px',
       color: '#2c3e50',
       display: 'flex',
       alignItems: 'center',
-      gap: '5px'
+      gap: '4px'
     },
     monthTitle: {
-      fontSize: '20px',
+      fontSize: '18px',
       fontWeight: 600,
       color: '#2c3e50',
-      minWidth: '200px',
+      minWidth: '180px',
       textAlign: 'center' as const
     },
     calendarGrid: {
       display: 'grid',
       gridTemplateColumns: 'repeat(7, 1fr)',
-      borderTop: '1px solid #eaeaea'
+      borderLeft: '1px solid #eaeaea',
+      borderRight: '1px solid #eaeaea'
     },
     dayHeader: {
-      padding: '15px',
+      padding: '12px 6px',
       textAlign: 'center' as const,
       fontWeight: 600,
       color: '#34495e',
       backgroundColor: '#f8f9fa',
       borderBottom: '1px solid #eaeaea',
       borderRight: '1px solid #eaeaea',
-      fontSize: '14px'
+      fontSize: '13px'
     },
     dayCell: {
-      minHeight: '100px',
-      padding: '10px',
+      minHeight: '92px',
+      padding: '7px',
       borderBottom: '1px solid #eaeaea',
       borderRight: '1px solid #eaeaea',
       backgroundColor: 'white',
       position: 'relative' as const
     },
     dayNumber: {
-      fontSize: '14px',
+      fontSize: '13px',
       fontWeight: 500,
       color: '#2c3e50',
-      marginBottom: '8px'
+      marginBottom: '6px'
     },
     todayIndicator: {
       backgroundColor: '#f57c00',
       color: 'white',
-      width: '24px',
-      height: '24px',
+      width: '22px',
+      height: '22px',
       borderRadius: '50%',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontSize: '12px',
+      fontSize: '11px',
       fontWeight: 600,
       position: 'absolute' as const,
-      top: '8px',
-      right: '8px'
+      top: '6px',
+      right: '6px'
     },
     eventBadge: {
-      fontSize: '12px',
-      padding: '6px 10px',
-      borderRadius: '6px',
-      marginBottom: '5px',
+      fontSize: '11px',
+      padding: '5px 7px',
+      borderRadius: '5px',
+      marginBottom: '4px',
       cursor: 'pointer',
       display: 'flex',
       alignItems: 'center',
-      gap: '6px',
+      gap: '5px',
       color: 'white',
       fontWeight: 500,
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+      boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
     },
     moreEvents: {
-      fontSize: '11px',
+      fontSize: '10px',
       color: '#7f8c8d',
       backgroundColor: '#f5f5f5',
-      padding: '3px 8px',
-      borderRadius: '4px',
-      marginTop: '5px',
+      padding: '2px 6px',
+      borderRadius: '3px',
+      marginTop: '4px',
       display: 'inline-block'
     },
-    controlsContainer: {
+    legendContainer: {
+      maxWidth: '1050px',
+      margin: '30px auto',
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
-      gap: '30px',
-      marginBottom: '30px'
+      gap: '24px'
     },
     legendCard: {
       backgroundColor: 'white',
-      padding: '20px',
-      borderRadius: '12px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+      padding: '18px',
+      borderRadius: '9px',
+      boxShadow: '0 3px 9px rgba(0,0,0,0.04)'
     },
     legendTitle: {
-      fontSize: '16px',
+      fontSize: '15px',
       fontWeight: 600,
-      marginBottom: '15px',
+      marginBottom: '12px',
       color: '#2c3e50'
     },
     legendGrid: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
-      gap: '12px'
+      gap: '10px'
     },
     legendItem: {
       display: 'flex',
       alignItems: 'center',
-      gap: '10px',
-      fontSize: '14px'
+      gap: '8px',
+      fontSize: '13px'
     },
     colorDot: {
-      width: '14px',
-      height: '14px',
+      width: '12px',
+      height: '12px',
       borderRadius: '3px',
       flexShrink: 0
     },
     filtersGrid: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
-      gap: '12px'
+      gap: '10px'
     },
     filterCheckbox: {
       display: 'flex',
       alignItems: 'center',
-      gap: '10px',
-      fontSize: '14px',
+      gap: '8px',
+      fontSize: '13px',
       cursor: 'pointer'
     },
     priorityFilter: {
-      marginTop: '15px',
-      paddingTop: '15px',
+      marginTop: '12px',
+      paddingTop: '12px',
       borderTop: '1px solid #eaeaea'
     },
     prioritySelect: {
       width: '100%',
-      padding: '10px',
+      padding: '9px',
       borderRadius: '6px',
       border: '1px solid #ddd',
       backgroundColor: 'white',
-      fontSize: '14px',
+      fontSize: '13px',
       color: '#2c3e50',
-      marginTop: '8px'
+      marginTop: '6px'
     }
   };
 
+  // Calculer le nombre total de lignes pour la dernière ligne
+  const totalRows = Math.ceil(calendarDays.length / 7);
+
   return (
     <div style={styles.container}>
-      <div style={styles.mainContent}>
-        {/* Header */}
-        <div style={styles.header}>
-          <h1 style={styles.headerTitle}>
-            🔧 Tableau de Bord Maintenance
-          </h1>
-          <button 
-            onClick={() => setShowNewTicketModal(true)}
-            style={styles.newTicketButton}
-          >
-            + Nouveau ticket
-          </button>
-        </div>
+      {/* Header */}
+      <div style={styles.header}>
+        <h1 style={styles.headerTitle}>
+          🔧 Tableau de Bord Maintenance
+        </h1>
+        <button 
+          onClick={() => setShowNewTicketModal(true)}
+          style={styles.newTicketButton}
+        >
+          + Nouveau ticket
+        </button>
+      </div>
 
-        {/* Stats */}
-        <div style={styles.statsGrid}>
-          <div style={styles.statCard}>
-            <div style={styles.statNumber}>{openTickets}</div>
-            <div style={styles.statLabel}>Tickets ouverts</div>
-          </div>
-          <div style={{...styles.statCard, borderLeftColor: '#1976d2'}}>
-            <div style={styles.statNumber}>{inProgressTickets}</div>
-            <div style={styles.statLabel}>En cours</div>
-          </div>
-          <div style={{...styles.statCard, borderLeftColor: '#388e3c'}}>
-            <div style={styles.statNumber}>{completedThisMonth}</div>
-            <div style={styles.statLabel}>Résolus ce mois</div>
-          </div>
-          <div style={{...styles.statCard, borderLeftColor: '#d32f2f'}}>
-            <div style={styles.statNumber}>{urgentTickets}</div>
-            <div style={styles.statLabel}>Urgences</div>
-          </div>
+      {/* Stats */}
+      <div style={styles.statsGrid}>
+        <div style={styles.statCard}>
+          <div style={styles.statNumber}>{openTickets}</div>
+          <div style={styles.statLabel}>Tickets ouverts</div>
         </div>
+        <div style={{...styles.statCard, borderLeftColor: '#1976d2'}}>
+          <div style={styles.statNumber}>{inProgressTickets}</div>
+          <div style={styles.statLabel}>En cours</div>
+        </div>
+        <div style={{...styles.statCard, borderLeftColor: '#388e3c'}}>
+          <div style={styles.statNumber}>{completedThisMonth}</div>
+          <div style={styles.statLabel}>Résolus ce mois</div>
+        </div>
+        <div style={{...styles.statCard, borderLeftColor: '#d32f2f'}}>
+          <div style={styles.statNumber}>{urgentTickets}</div>
+          <div style={styles.statLabel}>Urgences</div>
+        </div>
+      </div>
 
-        {/* Calendrier */}
-        <div style={styles.calendarContainer}>
-          <div style={styles.calendarHeader}>
-            <div style={styles.monthNavigation}>
-              <button 
-                onClick={prevMonth}
-                style={styles.navButton}
-              >
-                ← Précédent
-              </button>
-              <div style={styles.monthTitle}>
-                {monthNames[currentMonth]} {currentYear}
-              </div>
-              <button 
-                onClick={nextMonth}
-                style={styles.navButton}
-              >
-                Suivant →
-              </button>
-              <button 
-                onClick={goToToday}
-                style={{...styles.navButton, backgroundColor: '#f57c00', color: 'white', borderColor: '#f57c00'}}
-              >
-                Aujourd'hui
-              </button>
+      {/* Calendrier */}
+      <div style={styles.calendarContainer}>
+        <div style={styles.calendarHeader}>
+          <div style={styles.monthNavigation}>
+            <button 
+              onClick={prevMonth}
+              style={styles.navButton}
+            >
+              ← Préc.
+            </button>
+            <div style={styles.monthTitle}>
+              {monthNames[currentMonth]} {currentYear}
             </div>
-            
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <select 
-                value={selectedBuilding}
-                onChange={(e) => setSelectedBuilding(e.target.value)}
-                style={{
-                  padding: '10px 15px',
-                  borderRadius: '6px',
-                  border: '1px solid #ddd',
-                  backgroundColor: 'white',
-                  fontSize: '14px',
-                  color: '#2c3e50',
-                  minWidth: '180px'
-                }}
-              >
-                {buildings.map(building => (
-                  <option key={building.id} value={building.id === "all" ? "all" : building.name}>
-                    {building.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <button 
+              onClick={nextMonth}
+              style={styles.navButton}
+            >
+              Suiv. →
+            </button>
+            <button 
+              onClick={goToToday}
+              style={{...styles.navButton, backgroundColor: '#f57c00', color: 'white', borderColor: '#f57c00'}}
+            >
+              Aujourd'hui
+            </button>
           </div>
           
-          {/* Grille du calendrier */}
-          <div style={styles.calendarGrid}>
-            {/* En-têtes des jours */}
-            {dayNames.map(day => (
-              <div key={day} style={styles.dayHeader}>
-                {day}
-              </div>
-            ))}
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <select 
+              value={selectedBuilding}
+              onChange={(e) => setSelectedBuilding(e.target.value)}
+              style={{
+                padding: '8px 12px',
+                borderRadius: '6px',
+                border: '1px solid #ddd',
+                backgroundColor: 'white',
+                fontSize: '13px',
+                color: '#2c3e50',
+                minWidth: '150px'
+              }}
+            >
+              {buildings.map(building => (
+                <option key={building.id} value={building.id === "all" ? "all" : building.name}>
+                  {building.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        
+        {/* Grille du calendrier */}
+        <div style={styles.calendarGrid}>
+          {/* En-têtes des jours */}
+          {dayNames.map((day, index) => (
+            <div 
+              key={day} 
+              style={{
+                ...styles.dayHeader,
+                borderLeft: index === 0 ? '1px solid #eaeaea' : undefined
+              }}
+            >
+              {day}
+            </div>
+          ))}
+          
+          {/* Jours du mois */}
+          {calendarDays.map((day, index) => {
+            const isFirstColumn = index % 7 === 0;
+            const isLastColumn = index % 7 === 6;
+            const currentRow = Math.floor(index / 7) + 1;
+            const isLastRow = currentRow === totalRows;
             
-            {/* Jours du mois */}
-            {calendarDays.map((day, index) => (
+            return (
               <div
                 key={index}
                 style={{
                   ...styles.dayCell,
+                  borderLeft: isFirstColumn ? '1px solid #eaeaea' : undefined,
+                  borderRight: isLastColumn ? '1px solid #eaeaea' : undefined,
+                  borderBottom: isLastRow ? '1px solid #eaeaea' : undefined,
                   backgroundColor: day.isToday ? '#fff3e0' : 
                                  day.isWeekend ? '#f9f9f9' : 'white'
                 }}
@@ -621,119 +651,119 @@ export default function MaintenanceDashboard() {
                   </div>
                 )}
               </div>
-            ))}
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Légende et Filtres */}
+      <div style={styles.legendContainer}>
+        {/* Légende */}
+        <div style={styles.legendCard}>
+          <h3 style={styles.legendTitle}>Légende des Interventions</h3>
+          <div style={styles.legendGrid}>
+            <div style={styles.legendItem}>
+              <div style={{...styles.colorDot, backgroundColor: '#d32f2f'}}></div>
+              <span>Urgences</span>
+            </div>
+            <div style={styles.legendItem}>
+              <div style={{...styles.colorDot, backgroundColor: '#f57c00'}}></div>
+              <span>Maintenance</span>
+            </div>
+            <div style={styles.legendItem}>
+              <div style={{...styles.colorDot, backgroundColor: '#1976d2'}}></div>
+              <span>Inspections</span>
+            </div>
+            <div style={styles.legendItem}>
+              <div style={{...styles.colorDot, backgroundColor: '#7b1fa2'}}></div>
+              <span>Réparations</span>
+            </div>
+            <div style={styles.legendItem}>
+              <div style={{...styles.colorDot, backgroundColor: '#5d4037'}}></div>
+              <span>Nettoyage</span>
+            </div>
+            <div style={styles.legendItem}>
+              <div style={{...styles.colorDot, backgroundColor: '#388e3c'}}></div>
+              <span>Améliorations</span>
+            </div>
           </div>
         </div>
 
-        {/* Légende et Filtres */}
-        <div style={styles.controlsContainer}>
-          {/* Légende */}
-          <div style={styles.legendCard}>
-            <h3 style={styles.legendTitle}>Légende des Interventions</h3>
-            <div style={styles.legendGrid}>
-              <div style={styles.legendItem}>
-                <div style={{...styles.colorDot, backgroundColor: '#f57c00'}}></div>
-                <span>Maintenance</span>
-              </div>
-              <div style={styles.legendItem}>
-                <div style={{...styles.colorDot, backgroundColor: '#d32f2f'}}></div>
-                <span>Réparation</span>
-              </div>
-              <div style={styles.legendItem}>
-                <div style={{...styles.colorDot, backgroundColor: '#1976d2'}}></div>
-                <span>Inspection</span>
-              </div>
-              <div style={styles.legendItem}>
-                <div style={{...styles.colorDot, backgroundColor: '#c2185b'}}></div>
-                <span>Urgence</span>
-              </div>
-              <div style={styles.legendItem}>
-                <div style={{...styles.colorDot, backgroundColor: '#7b1fa2'}}></div>
-                <span>Nettoyage</span>
-              </div>
-              <div style={styles.legendItem}>
-                <div style={{...styles.colorDot, backgroundColor: '#388e3c'}}></div>
-                <span>Amélioration</span>
-              </div>
-            </div>
+        {/* Filtres */}
+        <div style={styles.legendCard}>
+          <h3 style={styles.legendTitle}>Filtrer les Interventions</h3>
+          <div style={styles.filtersGrid}>
+            <label style={styles.filterCheckbox}>
+              <input
+                type="checkbox"
+                checked={selectedFilters.maintenance}
+                onChange={() => handleFilterToggle('maintenance')}
+                style={{ width: '13px', height: '13px' }}
+              />
+              <span>Maintenance</span>
+            </label>
+            <label style={styles.filterCheckbox}>
+              <input
+                type="checkbox"
+                checked={selectedFilters.repair}
+                onChange={() => handleFilterToggle('repair')}
+                style={{ width: '13px', height: '13px' }}
+              />
+              <span>Réparations</span>
+            </label>
+            <label style={styles.filterCheckbox}>
+              <input
+                type="checkbox"
+                checked={selectedFilters.inspection}
+                onChange={() => handleFilterToggle('inspection')}
+                style={{ width: '13px', height: '13px' }}
+              />
+              <span>Inspections</span>
+            </label>
+            <label style={styles.filterCheckbox}>
+              <input
+                type="checkbox"
+                checked={selectedFilters.emergency}
+                onChange={() => handleFilterToggle('emergency')}
+                style={{ width: '13px', height: '13px' }}
+              />
+              <span>Urgences</span>
+            </label>
+            <label style={styles.filterCheckbox}>
+              <input
+                type="checkbox"
+                checked={selectedFilters.cleaning}
+                onChange={() => handleFilterToggle('cleaning')}
+                style={{ width: '13px', height: '13px' }}
+              />
+              <span>Nettoyage</span>
+            </label>
+            <label style={styles.filterCheckbox}>
+              <input
+                type="checkbox"
+                checked={selectedFilters.upgrade}
+                onChange={() => handleFilterToggle('upgrade')}
+                style={{ width: '13px', height: '13px' }}
+              />
+              <span>Améliorations</span>
+            </label>
           </div>
-
-          {/* Filtres */}
-          <div style={styles.legendCard}>
-            <h3 style={styles.legendTitle}>Filtrer les Interventions</h3>
-            <div style={styles.filtersGrid}>
-              <label style={styles.filterCheckbox}>
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.maintenance}
-                  onChange={() => handleFilterToggle('maintenance')}
-                  style={{ width: '16px', height: '16px' }}
-                />
-                <span>Maintenance</span>
-              </label>
-              <label style={styles.filterCheckbox}>
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.repair}
-                  onChange={() => handleFilterToggle('repair')}
-                  style={{ width: '16px', height: '16px' }}
-                />
-                <span>Réparations</span>
-              </label>
-              <label style={styles.filterCheckbox}>
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.inspection}
-                  onChange={() => handleFilterToggle('inspection')}
-                  style={{ width: '16px', height: '16px' }}
-                />
-                <span>Inspections</span>
-              </label>
-              <label style={styles.filterCheckbox}>
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.emergency}
-                  onChange={() => handleFilterToggle('emergency')}
-                  style={{ width: '16px', height: '16px' }}
-                />
-                <span>Urgences</span>
-              </label>
-              <label style={styles.filterCheckbox}>
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.cleaning}
-                  onChange={() => handleFilterToggle('cleaning')}
-                  style={{ width: '16px', height: '16px' }}
-                />
-                <span>Nettoyage</span>
-              </label>
-              <label style={styles.filterCheckbox}>
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.upgrade}
-                  onChange={() => handleFilterToggle('upgrade')}
-                  style={{ width: '16px', height: '16px' }}
-                />
-                <span>Améliorations</span>
-              </label>
-            </div>
-            
-            <div style={styles.priorityFilter}>
-              <label style={{ fontSize: '14px', fontWeight: 500, color: '#2c3e50' }}>
-                Filtrer par priorité
-              </label>
-              <select 
-                value={selectedPriority}
-                onChange={(e) => setSelectedPriority(e.target.value)}
-                style={styles.prioritySelect}
-              >
-                {priorities.map(priority => (
-                  <option key={priority.id} value={priority.id}>
-                    {priority.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+          
+          <div style={styles.priorityFilter}>
+            <label style={{ fontSize: '13px', fontWeight: 500, color: '#2c3e50' }}>
+              Filtrer par priorité
+            </label>
+            <select 
+              value={selectedPriority}
+              onChange={(e) => setSelectedPriority(e.target.value)}
+              style={styles.prioritySelect}
+            >
+              {priorities.map(priority => (
+                <option key={priority.id} value={priority.id}>
+                  {priority.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
@@ -766,17 +796,14 @@ export default function MaintenanceDashboard() {
               borderBottom: '1px solid #eaeaea',
               display: 'flex',
               justifyContent: 'space-between',
-              alignItems: 'center',
-              backgroundColor: '#f57c00',
-              color: 'white',
-              borderRadius: '12px 12px 0 0'
+              alignItems: 'center'
             }}>
-              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>
+              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#2c3e50' }}>
                 Nouveau Ticket de Maintenance
               </h3>
               <button 
                 onClick={() => setShowNewTicketModal(false)}
-                style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: 'white' }}
+                style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#7f8c8d' }}
               >
                 ×
               </button>

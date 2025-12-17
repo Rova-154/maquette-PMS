@@ -28,13 +28,14 @@ import { InvoiceList } from '../components/finance/InvoiceList';
 import { PaymentTracking } from '../components/finance/PaymentTracking';
 import { PaymentHistory } from '../components/finance/PaymentHistory';
 import { InvoiceDetails } from '../components/finance/InvoiceDetails';
+import { Alerts } from '../components/finance/Alerts';
 
 // Import reservations components
 import { ReservationsList } from '../components/reservations/ReservationsList';
 import { NewReservationModal } from '../components/reservations/NewReservationModal';
 import { BlockRoomModal } from '../components/reservations/BlockRoomModal';
 import { ReservationDetails } from '../components/reservations/ReservationDetails';
-import  ReservationsCalendar  from '../components/reservations/ReservationsCalendar';
+import ReservationsCalendar from '../components/reservations/ReservationsCalendar';
 
 // Import personnel components
 import { PersonnelList } from '../components/personnel/PersonnelList';
@@ -65,6 +66,9 @@ import AdvancedSearch from '../components/reports/AdvancedSearch';
 import StatisticsPage from '../components/reports/StatisticsPage';
 import NotificationsPage from '../components/reports/NotificationsPage';
 
+// Import profile page
+import ProfilePage from '../components/profile/ProfilePage';
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -73,6 +77,12 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <DashboardPage />,
+      },
+      
+      // Profile page
+      {
+        path: 'profile',
+        element: <ProfilePage />,
       },
       
       // Pensionnaires
@@ -146,7 +156,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'payments/alerts',
-        element: <ImportantTickets />,
+        element: <Alerts />,
       },
       
       // Réservations

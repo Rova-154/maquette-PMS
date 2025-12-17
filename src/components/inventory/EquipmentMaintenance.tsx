@@ -150,7 +150,7 @@ export default function EquipmentMaintenance() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Calendrier */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          {/* <div className="bg-white rounded-lg border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-[#403323]">Calendrier des maintenances</h2>
               <Calendar className="w-5 h-5 text-[#403323]" />
@@ -184,7 +184,7 @@ export default function EquipmentMaintenance() {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Rapports */}
           <div className="bg-white rounded-lg border border-gray-200 p-6">
