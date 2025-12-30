@@ -9,9 +9,9 @@ export function Header({ onMenuClick }: HeaderProps) {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-gray-200 px-4 md:px-6 py-3">
+    <header className="sticky top-0 z-30 flex-shrink-0 bg-white border-b border-gray-200 px-4 md:px-6 py-3">
       <div className="flex items-center justify-between">
-        {/* Left side - Menu button for mobile */}
+        {/* Left side */}
         <div className="flex items-center gap-4">
           <button
             onClick={onMenuClick}
@@ -21,7 +21,7 @@ export function Header({ onMenuClick }: HeaderProps) {
             <Menu className="w-5 h-5" />
           </button>
           
-          <div className="hidden md:flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-[#38712c] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">CH</span>
             </div>
@@ -99,3 +99,4 @@ export function Header({ onMenuClick }: HeaderProps) {
     </header>
   );
 }
+

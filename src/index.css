@@ -1656,3 +1656,144 @@ html {
     white-space: nowrap;
   }
 }
+/* Ajouter à la fin du fichier */
+
+/* Fix pour éviter les débordements horizontaux */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Améliorations pour les petits écrans */
+@media (max-width: 768px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+  
+  .stack-on-mobile {
+    flex-direction: column !important;
+  }
+}
+
+/* Pour éviter les animations sur les préférences réduites */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Ajouter à la fin du fichier */
+
+/* Reset de base */
+#root {
+  height: 100vh;
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Améliorations responsive */
+@media (max-width: 768px) {
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .p-6 {
+    padding: 1rem;
+  }
+  
+  .text-3xl {
+    font-size: 1.75rem;
+  }
+  
+  .text-2xl {
+    font-size: 1.5rem;
+  }
+}
+
+/* Ajouter à la fin du fichier */
+
+/* Fix général */
+#root {
+  height: 100vh;
+}
+
+/* Empêcher le débordement horizontal */
+body {
+  overflow-x: hidden;
+}
+
+/* Correction pour la sidebar sur desktop */
+@media (min-width: 1024px) {
+  .lg\:ml-64 {
+    margin-left: 16rem; /* 64 * 0.25rem = 16rem */
+  }
+  
+  /* S'assurer que le contenu ne dépasse pas */
+  .min-w-0 {
+    min-width: 0;
+  }
+}
+
+/* Améliorations pour mobile */
+@media (max-width: 640px) {
+  .p-6 {
+    padding: 1rem;
+  }
+  
+  /* Réduire l'espacement entre éléments */
+  .space-y-3 > * + * {
+    margin-top: 0.75rem;
+  }
+}
+
+/* Scrollbar personnalisée pour le main */
+main::-webkit-scrollbar {
+  width: 8px;
+}
+
+main::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+main::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+main::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
