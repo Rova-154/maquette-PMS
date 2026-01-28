@@ -194,13 +194,15 @@ export const Sidebar = memo(function Sidebar({ onClose }: SidebarProps) {
             <p className="text-xs text-white/80 lg:hidden">Admin</p>
           </div>
         </div>
+                {/* Bouton de fermeture mobile - Positionné correctement */}
         <button
           onClick={onClose}
-          className="lg:hidden p-1 hover:bg-white/10 rounded"
+          className="lg:hidden p-2 hover:bg-white/20 rounded-lg transition-colors absolute right-3"
           aria-label="Close sidebar"
         >
           <X className="w-5 h-5" />
         </button>
+
       </div>
 
       {/* Navigation */}
